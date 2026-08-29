@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "smoke": "node viz/smoke.mjs",
-    "verify-sim": "node --experimental-strip-types viz/verify-sim.mjs"
+    "verify-sim": "node --experimental-strip-types viz/verify-sim.mjs",
+    "make-og": "node --experimental-strip-types viz/make-og.mjs"
   },
   "devDependencies": {
     "puppeteer": "^24.28.1"

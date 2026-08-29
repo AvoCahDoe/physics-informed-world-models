@@ -95,13 +95,19 @@ that produced them.
 npm install            # repo root: puppeteer for the browser tests
 npm run verify-sim     # TS simulator vs. Python ground truth
 npm run smoke          # headless pass over all three routes
+npm run make-og        # regenerate the social share card
 ```
 
 `verify-sim` re-runs each exported trajectory through the TypeScript port and
 requires the Python truth to fall inside the envelope implied by the JSON's
 5-decimal rounding, which is a tighter statement than any fixed tolerance.
 `smoke` needs `npm run build && npm run preview` running in `viz/`; point it
-elsewhere with `SMOKE_URL`.
+elsewhere with `SMOKE_URL` to check a deployment. It covers all three routes
+and fails on console errors, broken figures, missing share assets, or any
+non-200 response.
+
+`make-og` draws `viz/public/og.png` using the TypeScript simulator, so the
+trajectory on the share card is real output rather than an illustration.
 
 ## Deploying
 

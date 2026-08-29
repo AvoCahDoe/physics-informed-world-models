@@ -2,17 +2,62 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href="https://physics-informed-world-models.vercel.app/" />
+
+    <title>Physics-Informed World Models — HNN vs. Neural ODE vs. MLP</title>
     <meta
       name="description"
-      content="Interactive comparison of a Hamiltonian Neural Network, a Neural ODE and an MLP predicting a bouncing ball, where contact breaks energy conservation."
+      content="Do Hamiltonian priors help when physics has contact? An interactive study comparing a Hamiltonian Neural Network, a Neural ODE and an MLP on a bouncing ball, with a live in-browser simulator."
     />
+    <meta name="author" content="Farid El Boubkraoui" />
     <meta name="theme-color" content="#0d1117" />
-    <title>Physics-Informed World Models — HNN vs. baselines</title>
+    <meta name="color-scheme" content="dark" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Physics-Informed World Models" />
+    <meta
+      property="og:title"
+      content="Does a Hamiltonian prior help when physics has contact?"
+    />
+    <meta
+      property="og:description"
+      content="HNN vs. Neural ODE vs. MLP on a bouncing ball. Contact breaks every smooth flow — here is what that costs each model, with a live simulator you can drive."
+    />
+    <meta property="og:url" content="https://physics-informed-world-models.vercel.app/" />
+    <meta
+      property="og:image"
+      content="https://physics-informed-world-models.vercel.app/og.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="A decaying bouncing-ball trajectory under the title: does a Hamiltonian prior help when physics has contact?"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Does a Hamiltonian prior help when physics has contact?"
+    />
+    <meta
+      name="twitter:description"
+      content="HNN vs. Neural ODE vs. MLP on a bouncing ball, with a live in-browser simulator."
+    />
+    <meta
+      name="twitter:image"
+      content="https://physics-informed-world-models.vercel.app/og.png"
+    />
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      This site renders its simulations in the browser, so it needs JavaScript
+      enabled. The full written analysis is available in results.md on GitHub:
+      https://github.com/AvoCahDoe/physics-informed-world-models
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

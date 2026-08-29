@@ -31,6 +31,7 @@ page.on("response", (r) => {
 });
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const document_title_differs = (a, b) => a.length > 10 && a !== b;
 // "load" rather than "networkidle0": the render loop keeps the page busy, so
 // idle-based waits are unreliable here.
 const go = (path) => page.goto(ROOT + path, { waitUntil: "load", timeout: 45000 });
@@ -41,7 +42,55 @@ await page.waitForSelector(".hero h1", { timeout: 20000 });
 check("/ redirects to /docs", new URL(page.url()).pathname === "/docs", page.url());
 check("nav has three tabs", (await page.$$(".tab")).length === 3);
 check("docs renders model cards", (await page.$$(".card")).length === 3);
+check("footer credits author", await page.$(".colophon") !== null);
 await page.screenshot({ path: shot("smoke_docs.png") });
+
+// ---------- share metadata ----------
+const meta = await page.evaluate(() => {
+  const get = (sel) => document.querySelector(sel)?.getAttribute("content") ?? "";
+  return {
+    title: document.title,
+    description: get('meta[name="description"]'),
+    ogImage: get('meta[property="og:image"]'),
+    ogTitle: get('meta[property="og:title"]'),
+    twitterCard: get('meta[name="twitter:card"]'),
+    icon: document.querySelector('link[rel="icon"]')?.getAttribute("href") ?? "",
+  };
+});
+check("page description set", meta.description.length > 60);
+check("og:title set", meta.ogTitle.length > 20);
+check("twitter card is large image", meta.twitterCard === "summary_large_image");
+
+// The share image is the one asset nothing on the page references, so a broken
+// path would never show up in normal browsing. Status alone proves nothing
+// here: the SPA fallback rewrites unknown paths to index.html with a 200, so a
+// missing file still "succeeds". Content-type is what actually distinguishes a
+// real asset from the HTML shell.
+// og:image must be absolute for crawlers, but for the fetch we re-point it at
+// the origin under test so a local run checks the local build.
+check("og:image is absolute", /^https:\/\//.test(meta.ogImage), meta.ogImage);
+const ogLocal = ROOT + new URL(meta.ogImage, ROOT).pathname;
+
+for (const [name, url, wantType] of [
+  ["og image", ogLocal, "image/png"],
+  ["favicon", new URL(meta.icon, ROOT).href, "image/svg+xml"],
+  ["robots.txt", `${ROOT}/robots.txt`, "text/plain"],
+  ["sitemap.xml", `${ROOT}/sitemap.xml`, "xml"],
+]) {
+  const got = await page.evaluate(async (u) => {
+    try {
+      const r = await fetch(u);
+      return { status: r.status, type: r.headers.get("content-type") ?? "" };
+    } catch (e) {
+      return { status: 0, type: String(e) };
+    }
+  }, url);
+  check(
+    `${name} serves real content`,
+    got.status === 200 && got.type.includes(wantType),
+    `${got.status} ${got.type}`,
+  );
+}
 
 // ---------- /results ----------
 await go("/results");
@@ -120,6 +169,11 @@ await sleep(1200);
 const h2 = await readout();
 
 check("live sim canvases mounted", (await page.$$(".try-stage canvas")).length === 2);
+check(
+  "route sets its own title",
+  document_title_differs(await page.title(), meta.title),
+  await page.title(),
+);
 check("live sim is animating", h1 !== h2, `${h1} -> ${h2}`);
 check("controls rendered", (await page.$$(".slider")).length >= 7);
 check("presets rendered", (await page.$$(".preset")).length === 5);

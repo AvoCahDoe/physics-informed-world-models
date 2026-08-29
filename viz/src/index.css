@@ -393,6 +393,42 @@ select:hover {
   text-align: center;
 }
 
+.sitefoot p {
+  margin: 0;
+}
+
+.colophon {
+  margin-top: 7px !important;
+  font-size: 12px;
+}
+
+.colophon strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.colophon a {
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.colophon a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.crash {
+  padding: 60px 0;
+  max-width: 640px;
+}
+
+.crash h1 {
+  margin: 0 0 10px;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+}
+
 .route-loading {
   display: grid;
   place-items: center;
@@ -441,6 +477,10 @@ select:hover {
 
 .prose {
   max-width: 900px;
+  /* Centred: the shell is much wider than a comfortable measure, so a
+     left-aligned column leaves the right half of a desktop window empty. */
+  margin: 0 auto;
+  width: 100%;
   gap: 34px;
 }
 
@@ -478,6 +518,8 @@ select:hover {
   border: 1px solid var(--border);
   border-radius: 5px;
   padding: 1px 5px;
+  /* Inline snippets like the Hamiltonian are longer than a phone is wide. */
+  overflow-wrap: anywhere;
 }
 
 .hero {

@@ -185,6 +185,47 @@ export default function Docs() {
       </section>
 
       <section>
+        <h2>How it's built</h2>
+        <p>
+          The research code is PyTorch with a shared <code>DynamicsModel</code>{" "}
+          interface, so all three models run through one training loop, one
+          rollout harness and one evaluation script. Nothing about the
+          comparison depends on which model is being measured.
+        </p>
+        <ul>
+          <li>
+            <strong>Simulator</strong> — velocity Verlet with exact-crossing
+            contact, written from scratch. An earlier semi-implicit Euler
+            version drifted 13.5% in the elastic case, which would have shown up
+            as model error.
+          </li>
+          <li>
+            <strong>Correctness</strong> — <code>verify.py</code> checks energy
+            conservation, the HNN's second-order autograd, the Hamiltonian plot
+            maths against a hand-set <code>H</code>, and CPU/GPU agreement.
+            Figures are only trustworthy if these pass first.
+          </li>
+          <li>
+            <strong>This site</strong> — React, TypeScript, react-three-fiber
+            for the 3D scene and Recharts for the plots. three.js and Recharts
+            load only on the results route, so this page stays light.
+          </li>
+          <li>
+            <strong>The live simulator</strong> — a TypeScript port of the
+            Python integrator, checked against every exported trajectory. The
+            test requires the Python truth to fall inside the envelope implied
+            by the data file's own rounding, which is stricter than picking a
+            tolerance.
+          </li>
+          <li>
+            <strong>Deployment</strong> — a static build on Vercel, with a
+            headless browser suite that exercises all three routes and fails on
+            console errors, broken images or missing assets.
+          </li>
+        </ul>
+      </section>
+
+      <section>
         <h2>Reproducing</h2>
         <pre className="code">
           <code>{`pip install -r requirements.txt

@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const TABS = [
   { to: "/docs", label: "Docs" },
@@ -7,11 +8,19 @@ const TABS = [
   { to: "/try", label: "Try" },
 ];
 
+const TITLES: Record<string, string> = {
+  "/docs": "Method — Physics-Informed World Models",
+  "/results": "Results — Physics-Informed World Models",
+  "/try": "Live simulator — Physics-Informed World Models",
+};
+
 export default function Layout() {
   const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.title =
+      TITLES[pathname] ?? "Physics-Informed World Models — HNN vs. Neural ODE vs. MLP";
   }, [pathname]);
 
   return (
@@ -49,11 +58,32 @@ export default function Layout() {
         </a>
       </header>
 
-      <Outlet />
+      {/* Keyed on the route so recovering from a crash on one page doesn't
+          leave the boundary latched when navigating to another. */}
+      <ErrorBoundary key={pathname}>
+        <Outlet />
+      </ErrorBoundary>
 
       <footer className="sitefoot">
-        Ground truth uses velocity Verlet with event-resolved restitution. Models
-        are free-running rollouts from the same initial state, trained in PyTorch.
+        <p>
+          Ground truth uses velocity Verlet with event-resolved restitution.
+          Models are free-running rollouts from the same initial state, trained
+          in PyTorch.
+        </p>
+        <p className="colophon">
+          Built by <strong>Farid El Boubkraoui</strong> ·{" "}
+          <a
+            href="https://github.com/AvoCahDoe/physics-informed-world-models"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Source and full writeup
+          </a>{" "}
+          ·{" "}
+          <a href="https://arxiv.org/abs/1906.01563" target="_blank" rel="noreferrer">
+            HNN paper
+          </a>
+        </p>
       </footer>
     </div>
   );
