@@ -5,7 +5,8 @@
   "description": "Dev tooling for the visualization. The deployable app lives in viz/ and does not depend on anything here.",
   "type": "module",
   "scripts": {
-    "smoke": "node viz/smoke.mjs"
+    "smoke": "node viz/smoke.mjs",
+    "verify-sim": "node --experimental-strip-types viz/verify-sim.mjs"
   },
   "devDependencies": {
     "puppeteer": "^24.28.1"

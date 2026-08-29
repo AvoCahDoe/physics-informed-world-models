@@ -758,6 +758,15 @@ def export_viz(ctx, n_traj: int = 6) -> None:
             shutil.copy2(src, public / src.name)
         print(f"[viz] mirrored to {public.relative_to(ROOT)}")
 
+        # The /results page serves the figures straight out of the app bundle,
+        # so they have to travel with it for the same reason.
+        figures = public.parent / "plots"
+        figures.mkdir(parents=True, exist_ok=True)
+        for src in [*PLOTS.glob("*.png"), PLOTS / "metrics.json"]:
+            if src.exists():
+                shutil.copy2(src, figures / src.name)
+        print(f"[viz] mirrored figures to {figures.relative_to(ROOT)}")
+
 
 # --------------------------------------------------------------------------
 

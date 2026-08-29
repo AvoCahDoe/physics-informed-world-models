@@ -61,18 +61,47 @@ model survives contact without an explicit event rule.
 | `results.md` | Written interpretation of every figure |
 | `viz/` | React visualization (deployable static site) |
 
-## Interactive visualization
+## Interactive site
 
-`viz/` is a React + react-three-fiber app that animates all three models
-free-running against ground truth, with energy and height charts synced to the
-same clock, and a toggle for the naive (no contact event) rollouts.
+`viz/` is a React app with three routes:
+
+| Route | What it is |
+| --- | --- |
+| `/docs` | The method: system, models, contact handling, training, limitations |
+| `/results` | The rollout player plus all 13 figures with interpretations |
+| `/try` | A live simulation you can drive |
+
+`/results` animates all three models free-running against ground truth, with
+energy and height charts synced to the same clock and a toggle for the naive
+(no contact event) rollouts. Those rollouts are precomputed, so the site is
+fully static — no backend.
+
+`/try` is not a replay. `viz/src/sim/ball.ts` is a TypeScript port of
+`sim/ball.py`, so the browser runs the same velocity-Verlet integrator with the
+same exact-crossing contact resolution, and you can vary drop height, initial
+velocity, restitution, gravity and mass live.
 
 ```bash
 cd viz && npm install && npm run dev
 ```
 
-The rollouts are precomputed, so the site is fully static — no backend.
-`evaluate.py` writes `viz_data/` and mirrors it into `viz/public/data/`.
+`evaluate.py` writes `viz_data/` and mirrors both the rollouts and the figures
+into `viz/public/`, so the deployed site can't disagree with the checkpoints
+that produced them.
+
+### Checks
+
+```bash
+npm install            # repo root: puppeteer for the browser tests
+npm run verify-sim     # TS simulator vs. Python ground truth
+npm run smoke          # headless pass over all three routes
+```
+
+`verify-sim` re-runs each exported trajectory through the TypeScript port and
+requires the Python truth to fall inside the envelope implied by the JSON's
+5-decimal rounding, which is a tighter statement than any fixed tolerance.
+`smoke` needs `npm run build && npm run preview` running in `viz/`; point it
+elsewhere with `SMOKE_URL`.
 
 ## Deploying
 
@@ -93,11 +122,16 @@ point it at the repo; it picks up `render.yaml` automatically.
 Both configs fingerprint-cache `/assets/*` forever and cache `/data/*` for an
 hour, since rollout JSON is regenerated rather than fingerprinted.
 
-Note that `viz/public/data/` must be committed — it holds the rollouts the
-deployed site serves. The `.gitignore` anchors `/data/` to the repo root
-specifically so this directory is not ignored.
+Client-side routing means `/docs`, `/results` and `/try` are not real files, so
+both configs rewrite unmatched paths to `index.html`. Static assets are matched
+first, so `/data/*` and `/plots/*` still resolve normally.
+
+Note that `viz/public/data/` and `viz/public/plots/` must be committed — they
+hold the rollouts and figures the deployed site serves. The `.gitignore`
+anchors `/data/` to the repo root specifically so these are not ignored.
 
 ## Notes
 
-`viz_data/config.json` carries the physics constants so a future React app can
-port the simulator to JS and reproduce ground truth exactly.
+`viz_data/config.json` carries the physics constants, which is what lets
+`viz/src/sim/ball.ts` reproduce ground truth exactly rather than approximating
+it.
