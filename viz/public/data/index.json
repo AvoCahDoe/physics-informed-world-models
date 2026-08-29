@@ -1,0 +1,135 @@
+{
+ "trajectories": [
+  {
+   "id": 0,
+   "file": "trajectory_0.json",
+   "label": "h0 = 1.27 m, v0 = +0.90 m/s",
+   "q0": 1.2677,
+   "p0": 0.9009
+  },
+  {
+   "id": 1,
+   "file": "trajectory_1.json",
+   "label": "h0 = 0.72 m, v0 = +0.90 m/s",
+   "q0": 0.7162,
+   "p0": 0.8973
+  },
+  {
+   "id": 2,
+   "file": "trajectory_2.json",
+   "label": "h0 = 0.97 m, v0 = -0.15 m/s",
+   "q0": 0.9677,
+   "p0": -0.1533
+  },
+  {
+   "id": 3,
+   "file": "trajectory_3.json",
+   "label": "h0 = 1.74 m, v0 = -0.18 m/s",
+   "q0": 1.7416,
+   "p0": -0.1816
+  },
+  {
+   "id": 4,
+   "file": "trajectory_4.json",
+   "label": "h0 = 1.32 m, v0 = -0.94 m/s",
+   "q0": 1.3244,
+   "p0": -0.9449
+  },
+  {
+   "id": 5,
+   "file": "trajectory_5.json",
+   "label": "h0 = 1.63 m, v0 = +0.08 m/s",
+   "q0": 1.6303,
+   "p0": 0.0763
+  }
+ ],
+ "models": [
+  "mlp",
+  "hnn",
+  "node"
+ ],
+ "labels": {
+  "truth": "Ground truth",
+  "mlp": "MLP",
+  "hnn": "HNN",
+  "node": "Neural ODE"
+ },
+ "physics": {
+  "g": 9.81,
+  "dt": 0.01,
+  "restitution": 0.8,
+  "n_steps": 200,
+  "q0_range": [
+   0.5,
+   2.0
+  ],
+  "v0_range": [
+   -1.0,
+   1.0
+  ]
+ },
+ "metrics": {
+  "mlp": {
+   "one_step_derivative_mse": 0.0002340233331779018,
+   "rollout_mse": 0.5816181302070618,
+   "median_traj_mse": 0.582201361656189,
+   "mean_abs_energy_drift": 0.3995254337787628,
+   "generalization_gap": 4.667935471791467,
+   "rollout_mse_by_mass": {
+    "0.5": 1.2810391187667847,
+    "0.8": 0.6720849871635437,
+    "1.0": 0.5816181898117065,
+    "1.5": 2.4606895446777344,
+    "2.0": 6.446011066436768
+   },
+   "divergence_rate_10x": 0.0,
+   "drift_flight": 6.84872579574585,
+   "drift_contact": 5.786572456359863,
+   "elastic_energy_drift": 0.4709041118621826,
+   "n_params": 41202,
+   "train_seconds": 80.29647374153137
+  },
+  "hnn": {
+   "one_step_derivative_mse": 2.0769644834217615e-05,
+   "rollout_mse": 0.0019483205396682024,
+   "median_traj_mse": 3.5724769986700267e-06,
+   "mean_abs_energy_drift": 0.0032365971710532904,
+   "generalization_gap": 1249.2352371813797,
+   "rollout_mse_by_mass": {
+    "0.5": 1.0572108030319214,
+    "0.8": 0.36146044731140137,
+    "1.0": 0.0019483206560835242,
+    "1.5": 2.1000187397003174,
+    "2.0": 6.216953277587891
+   },
+   "divergence_rate_10x": 0.0,
+   "drift_flight": 0.08686945587396622,
+   "drift_contact": 0.04695846140384674,
+   "elastic_energy_drift": 0.0029002490919083357,
+   "n_params": 41001,
+   "train_seconds": 817.2520806789398,
+   "hamiltonian_residual_std": 2.186786651611328,
+   "hamiltonian_residual_std_in_data": 0.0017075685318559408
+  },
+  "node": {
+   "one_step_derivative_mse": 4.657367753679864e-06,
+   "rollout_mse": 0.0019448685925453901,
+   "median_traj_mse": 1.4204233593773097e-06,
+   "mean_abs_energy_drift": 0.0017566545866429806,
+   "generalization_gap": 1257.2115472168753,
+   "rollout_mse_by_mass": {
+    "0.5": 1.063341498374939,
+    "0.8": 0.36147287487983704,
+    "1.0": 0.0019448685925453901,
+    "1.5": 2.100756883621216,
+    "2.0": 6.254873752593994
+   },
+   "divergence_rate_10x": 0.0,
+   "drift_flight": 0.06708801537752151,
+   "drift_contact": 0.04604724794626236,
+   "elastic_energy_drift": 0.0049195787869393826,
+   "n_params": 41202,
+   "train_seconds": 702.5810668468475
+  }
+ }
+}

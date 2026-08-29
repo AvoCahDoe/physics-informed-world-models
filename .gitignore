@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# Anchored to the repo root: an unanchored "data/" would also match
+# viz/public/data/, which must ship with the deployed site.
+/data/
+/checkpoints/
+# Mirrored into viz/public/data/, which is the copy that gets deployed.
+/viz_data/
+
+# plots/ is intentionally tracked: results.md embeds these figures, so they
+# have to be in the repo for the writeup to render on GitHub.
+
+node_modules/
+viz/dist/
+viz/*.png
+.vercel/
+*.log
