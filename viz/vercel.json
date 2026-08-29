@@ -1,10 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm --prefix viz ci",
-  "buildCommand": "npm --prefix viz run build",
-  "outputDirectory": "viz/dist",
-  "framework": null,
-  "cleanUrls": true,
+  "framework": "vite",
+  "outputDirectory": "dist",
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
   "headers": [
     {

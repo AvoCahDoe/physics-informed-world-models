@@ -105,26 +105,34 @@ elsewhere with `SMOKE_URL`.
 
 ## Deploying
 
-The app is a static SPA; both platforms build from the repo root using the
-committed configs.
+Live at **https://physics-informed-world-models.vercel.app**.
 
-**Vercel** — [vercel.json](vercel.json) sets the build to `viz/` and publishes
-`viz/dist`:
+The app is a static SPA. Both platforms treat `viz/` as the project root, so
+there is no repo-root build indirection.
+
+**Vercel** — [viz/vercel.json](viz/vercel.json) is the project config. Deploy
+from `viz/`, not the repo root:
 
 ```bash
-npx vercel --prod
+cd viz && npx vercel --prod
 ```
 
 **Render** — [render.yaml](render.yaml) declares a static site with
 `rootDir: viz`. Push the repo, then in Render choose **New > Blueprint** and
 point it at the repo; it picks up `render.yaml` automatically.
 
-Both configs fingerprint-cache `/assets/*` forever and cache `/data/*` for an
-hour, since rollout JSON is regenerated rather than fingerprinted.
+Both configs fingerprint-cache `/assets/*` forever and cache `/data/*` and
+`/plots/*` for an hour, since those are regenerated rather than fingerprinted.
 
 Client-side routing means `/docs`, `/results` and `/try` are not real files, so
 both configs rewrite unmatched paths to `index.html`. Static assets are matched
 first, so `/data/*` and `/plots/*` still resolve normally.
+
+Two things are worth knowing if you re-create the Vercel project. Don't set
+`cleanUrls`, which rewrites `/index.html` and breaks the SPA fallback so every
+deep link 404s. And link the project from inside `viz/`: linking from the repo
+root makes the CLI create a "services" project, whose routing ignores the
+rewrites entirely.
 
 Note that `viz/public/data/` and `viz/public/plots/` must be committed — they
 hold the rollouts and figures the deployed site serves. The `.gitignore`
